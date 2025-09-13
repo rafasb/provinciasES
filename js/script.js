@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const cargarMapa = async () => {
         try {
-            const response = await fetch('img/mapa-provincias-es.svg');
+            const response = await fetch('img/provinciasES.svg');
             if (!response.ok) throw new Error('No se pudo cargar el mapa.');
             const svgText = await response.text();
             mapaContainer.innerHTML = svgText;
