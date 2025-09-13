@@ -19,12 +19,6 @@
     transition: fill 0.3s ease;
 }
 
-/* Estilo para las provincias ya mapeadas en la herramienta */
-.provincia.mapped {
-    fill: #0dcaf0; /* Cian de Bootstrap */
-    stroke: #000;
-}
-
 /* Estilo por defecto de las provincias */
 .provincia {
     fill: #f8f9fa; /* Gris claro de Bootstrap */

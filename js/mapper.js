@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const svgIdInput = document.getElementById('svg-id');
     const provinceNameInput = document.getElementById('province-name');
     const communityNameInput = document.getElementById('community-name');
-    const mappingForm = document-getElementById('mapping-form');
+    const mappingForm = document.getElementById('mapping-form');
     const outputCodeEl = document.getElementById('output-code');
     const generateBtn = document.getElementById('generate-btn');
     const copyBtn = document-getElementById('copy-btn');
@@ -153,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
             codeString += `        nombre: "${comunidad.nombre}",\n`;
             codeString += '        provincias: [\n';
             comunidad.provincias.forEach((provincia, pIndex) => {
-                // Eliminamos svgId del output final, no es necesario para el juego
-                codeString += `            { id: "${provincia.id}", nombre: "${provincia.nombre}" }`;
+                // Usamos el svgId original como el 'id' para el juego, que es lo que se necesita para encontrar el elemento en el mapa.
+                codeString += `            { id: "${provincia.svgId}", nombre: "${provincia.nombre}" }`;
                 codeString += (pIndex < comunidad.provincias.length - 1) ? ',\n' : '\n';
             });
             codeString += '        ]\n';
