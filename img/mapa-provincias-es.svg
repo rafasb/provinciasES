@@ -1,0 +1,12 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <style>
+    .provincia { fill: #f8f9fa; stroke: #6c757d; stroke-width: 1; }
+    .provincia.highlight { fill: #ffc107; stroke: #000; stroke-width: 2; }
+    .provincia.correct { fill: #198754; }
+  </style>
+  <!-- NOTA: Estos <path> son solo ejemplos. Se necesitaría un SVG real con las rutas correctas. -->
+  <path id="madrid" class="provincia" d="M390,290 h20 v20 h-20 z" /><title>Madrid</title>
+  <path id="barcelona" class="provincia" d="M600,200 h20 v20 h-20 z" /><title>Barcelona</title>
+  <path id="sevilla" class="provincia" d="M300,450 h20 v20 h-20 z" /><title>Sevilla</title>
+  <!-- ... aquí irían las 50 rutas de las provincias, cada una con su 'id' y su 'd' (datos de la ruta) correctos ... -->
+</svg>

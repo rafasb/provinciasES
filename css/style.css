@@ -1,0 +1,39 @@
+#mapa-container svg {
+    width: 100%;
+    height: auto;
+}
+
+/* Estilo para la provincia por la que se pregunta */
+.provincia.highlight {
+    fill: #ffc107; /* Amarillo de Bootstrap */
+    stroke: #000;
+    stroke-width: 3px;
+    transition: fill 0.3s ease;
+}
+
+/* Estilo para las provincias ya acertadas */
+.provincia.correct {
+    fill: #198754; /* Verde de Bootstrap */
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: fill 0.3s ease;
+}
+
+/* Estilo para las provincias ya mapeadas en la herramienta */
+.provincia.mapped {
+    fill: #0dcaf0; /* Cian de Bootstrap */
+    stroke: #000;
+}
+
+/* Estilo por defecto de las provincias */
+.provincia {
+    fill: #f8f9fa; /* Gris claro de Bootstrap */
+    stroke: #6c757d;
+    stroke-width: 1px;
+    transition: fill 0.3s ease;
+    cursor: help;
+}
+
+.provincia:hover {
+    fill: #e9ecef;
+}
