@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mappingForm = document.getElementById('mapping-form');
     const outputCodeEl = document.getElementById('output-code');
     const generateBtn = document.getElementById('generate-btn');
-    const copyBtn = document-getElementById('copy-btn');
+    const copyBtn = document.getElementById('copy-btn');
     const copyFeedbackEl = document.getElementById('copy-feedback');
 
     // --- ESTADO DE LA HERRAMIENTA ---
