@@ -1,6 +1,7 @@
 const comunidades = [
     {
         nombre: "Andalucía",
+        capital: "Sevilla",
         provincias: [
             { id: "path580", nombre: "Almería" },
             { id: "path550", nombre: "Cádiz" },
@@ -14,6 +15,7 @@ const comunidades = [
     },
     {
         nombre: "Aragón",
+        capital: "Zaragoza",
         provincias: [
             { id: "path452", nombre: "Huesca" },
             { id: "path420", nombre: "Teruel" },
@@ -22,18 +24,21 @@ const comunidades = [
     },
     {
         nombre: "Asturias",
+        capital: "Oviedo",
         provincias: [
             { id: "path544", nombre: "Asturias" }
         ]
     },
     {
         nombre: "Cantabria",
+        capital: "Santander",
         provincias: [
             { id: "path334", nombre: "Cantabria" }
         ]
     },
     {
         nombre: "Castilla la Mancha",
+        capital: "Toledo",
         provincias: [
             { id: "path484", nombre: "Albacete" },
             { id: "path514", nombre: "Ciudad Real" },
@@ -44,19 +49,22 @@ const comunidades = [
     },
     {
         nombre: "Castilla y León",
+        capital: "Valladolid",
         provincias: [
-            { id: "path498", nombre: "Avila" },
+            { id: "path498", nombre: "Ávila" },
             { id: "path42", nombre: "Burgos" },
             { id: "path404", nombre: "León" },
             { id: "path640", nombre: "Palencia" },
             { id: "path590", nombre: "Salamanca" },
             { id: "path604", nombre: "Segovia" },
             { id: "path468", nombre: "Soria" },
+            { id: "path572", nombre: "Valladolid" },
             { id: "path538", nombre: "Zamora" }
         ]
     },
     {
         nombre: "Cataluña",
+        capital: "Barcelona",
         provincias: [
             { id: "path364", nombre: "Barcelona" },
             { id: "path648", nombre: "Gerona" },
@@ -66,20 +74,23 @@ const comunidades = [
     },
     {
         nombre: "Ceuta",
+        capital: "Ceuta",
         provincias: [
             { id: "path758", nombre: "Ceuta" }
         ]
     },
     {
         nombre: "Comunidad Valenciana",
+        capital: "Valencia",
         provincias: [
             { id: "path670", nombre: "Alicante" },
             { id: "path678", nombre: "Castellón" },
-            { id: "path566", nombre: "Valencia" }
+            { id: "poligon396", nombre: "Valencia" }
         ]
     },
     {
         nombre: "Extremadura",
+        capital: "Mérida",
         provincias: [
             { id: "path412", nombre: "Badajoz" },
             { id: "path426", nombre: "Cáceres" }
@@ -87,6 +98,7 @@ const comunidades = [
     },
     {
         nombre: "Galicia",
+        capital: "Santiago de Compostela",
         provincias: [
             { id: "path662", nombre: "La Coruña" },
             { id: "path460", nombre: "Lugo" },
@@ -96,28 +108,61 @@ const comunidades = [
     },
     {
         nombre: "Islas Baleares",
+        capital: "Palma de Mallorca",
         provincias: [
             { id: "path742", nombre: "Islas Baleares" }
         ]
     },
     {
         nombre: "Murcia",
+        capital: "Murcia",
         provincias: [
             { id: "path492", nombre: "Murcia" }
         ]
     },
     {
         nombre: "Navarra",
+        capital: "Pamplona",
         provincias: [
             { id: "path556", nombre: "Navarra" }
         ]
     },
     {
-        nombre: "Pais Vasco",
+        nombre: "País Vasco",
+        capital: "Vitoria-Gasteiz",
         provincias: [
-            { id: "path704", nombre: "Alaba" },
-            { id: "path750", nombre: "Guipuzcua" },
+            { id: "path704", nombre: "Álava" },
+            { id: "path750", nombre: "Guipúzcoa" },
             { id: "path730", nombre: "Vizcaya" }
         ]
     },
+    {
+        nombre: "La Rioja",
+        capital: "Logroño",
+        provincias: [
+            { id: "path616", nombre: "La Rioja" }
+        ]
+    },
+    {
+        nombre: "Madrid",
+        capital: "Madrid",
+        provincias: [
+            { id: "path474", nombre: "Madrid" }
+        ]
+    },
+    {
+        nombre: "Melilla",
+        capital: "Melilla",
+        provincias: [
+            { id: "path764", nombre: "Melilla" }
+        ]
+    },
+    {
+        nombre: "Islas Canarias",
+        capital: "Las Palmas de Gran Canaria / Santa Cruz de Tenerife",
+        provincias: [
+            { id: "path712", nombre: "Las Palmas" },
+            { id: "path736", nombre: "Santa Cruz de Tenerife" }
+        ]
+    }
 ];
