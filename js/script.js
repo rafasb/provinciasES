@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleTextEl = document.getElementById('toggle-text');
     const provinciasEncontradasEl = document.getElementById('provincias-encontradas');
     const totalProvinciasEl = document.getElementById('total-provincias');
+    const languageSelector = document.getElementById('language-selector');
 
     const resultadoModal = new bootstrap.Modal(resultadoModalEl);
 
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let provinciasEncontradas = new Set();
     let pistasUsadas = 0;
     let capitalCompletada = false;
+    let idiomaActual = 'es';
 
     /**
      * Normaliza un string: minúsculas, sin espacios extra y sin tildes.
