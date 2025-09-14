@@ -2,149 +2,122 @@ const comunidades = [
     {
         nombre: "Andalucía",
         provincias: [
-            { id: "almeria", nombre: "Almería" },
-            { id: "cadiz", nombre: "Cádiz" },
-            { id: "cordoba", nombre: "Córdoba" },
-            { id: "granada", nombre: "Granada" },
-            { id: "huelva", nombre: "Huelva" },
-            { id: "jaen", nombre: "Jaén" },
-            { id: "malaga", nombre: "Málaga" },
-            { id: "sevilla", nombre: "Sevilla" }
+            { id: "path580", nombre: "Almería" },
+            { id: "path550", nombre: "Cádiz" },
+            { id: "path504", nombre: "Córdoba" },
+            { id: "path530", nombre: "Granada" },
+            { id: "path522", nombre: "Huelva" },
+            { id: "path408", nombre: "Jaén" },
+            { id: "path596", nombre: "Málaga" },
+            { id: "path446", nombre: "Sevilla" }
         ]
     },
     {
         nombre: "Aragón",
         provincias: [
-            { id: "huesca", nombre: "Huesca" },
-            { id: "teruel", nombre: "Teruel" },
-            { id: "zaragoza", nombre: "Zaragoza" }
+            { id: "path452", nombre: "Huesca" },
+            { id: "path420", nombre: "Teruel" },
+            { id: "path76", nombre: "Zaragoza" }
         ]
     },
     {
-        nombre: "Principado de Asturias",
+        nombre: "Asturias",
         provincias: [
-            { id: "asturias", nombre: "Asturias" }
-        ]
-    },
-    {
-        nombre: "Islas Baleares",
-        provincias: [
-            { id: "islas-baleares", nombre: "Islas Baleares" }
-        ]
-    },
-    {
-        nombre: "País Vasco",
-        provincias: [
-            { id: "alava", nombre: "Álava" },
-            { id: "guipuzcoa", nombre: "Guipúzcoa" },
-            { id: "vizcaya", nombre: "Vizcaya" }
-        ]
-    },
-    {
-        nombre: "Canarias",
-        provincias: [
-            { id: "santa-cruz-de-tenerife", nombre: "Santa Cruz de Tenerife" },
-            { id: "las-palmas", nombre: "Las Palmas" }
+            { id: "path544", nombre: "Asturias" }
         ]
     },
     {
         nombre: "Cantabria",
         provincias: [
-            { id: "cantabria", nombre: "Cantabria" }
+            { id: "path334", nombre: "Cantabria" }
+        ]
+    },
+    {
+        nombre: "Castilla la Mancha",
+        provincias: [
+            { id: "path484", nombre: "Albacete" },
+            { id: "path514", nombre: "Ciudad Real" },
+            { id: "path440", nombre: "Cuenca" },
+            { id: "path622", nombre: "Guadalajara" },
+            { id: "path434", nombre: "Toledo" }
         ]
     },
     {
         nombre: "Castilla y León",
         provincias: [
-            { id: "avila", nombre: "Ávila" },
-            { id: "burgos", nombre: "Burgos" },
-            { id: "leon", nombre: "León" },
-            { id: "palencia", nombre: "Palencia" },
-            { id: "salamanca", nombre: "Salamanca" },
-            { id: "segovia", nombre: "Segovia" },
-            { id: "soria", nombre: "Soria" },
-            { id: "valladolid", nombre: "Valladolid" },
-            { id: "zamora", nombre: "Zamora" }
-        ]
-    },
-    {
-        nombre: "Castilla-La Mancha",
-        provincias: [
-            { id: "albacete", nombre: "Albacete" },
-            { id: "ciudad-real", nombre: "Ciudad Real" },
-            { id: "cuenca", nombre: "Cuenca" },
-            { id: "guadalajara", nombre: "Guadalajara" },
-            { id: "toledo", nombre: "Toledo" }
+            { id: "path498", nombre: "Avila" },
+            { id: "path42", nombre: "Burgos" },
+            { id: "path404", nombre: "León" },
+            { id: "path640", nombre: "Palencia" },
+            { id: "path590", nombre: "Salamanca" },
+            { id: "path604", nombre: "Segovia" },
+            { id: "path468", nombre: "Soria" },
+            { id: "path538", nombre: "Zamora" }
         ]
     },
     {
         nombre: "Cataluña",
         provincias: [
-            { id: "barcelona", nombre: "Barcelona" },
-            { id: "gerona", nombre: "Gerona" },
-            { id: "lerida", nombre: "Lérida" },
-            { id: "tarragona", nombre: "Tarragona" }
+            { id: "path364", nombre: "Barcelona" },
+            { id: "path648", nombre: "Gerona" },
+            { id: "path358", nombre: "Lérida" },
+            { id: "path688", nombre: "Tarragona" }
         ]
     },
     {
-        nombre: "Extremadura",
+        nombre: "Ceuta",
         provincias: [
-            { id: "badajoz", nombre: "Badajoz" },
-            { id: "caceres", nombre: "Cáceres" }
-        ]
-    },
-    {
-        nombre: "Galicia",
-        provincias: [
-            { id: "la-coruna", nombre: "La Coruña" },
-            { id: "lugo", nombre: "Lugo" },
-            { id: "orense", nombre: "Orense" },
-            { id: "pontevedra", nombre: "Pontevedra" }
-        ]
-    },
-    {
-        nombre: "Comunidad de Madrid",
-        provincias: [
-            { id: "madrid", nombre: "Madrid" }
-        ]
-    },
-    {
-        nombre: "Región de Murcia",
-        provincias: [
-            { id: "murcia", nombre: "Murcia" }
-        ]
-    },
-    {
-        nombre: "Comunidad Foral de Navarra",
-        provincias: [
-            { id: "navarra", nombre: "Navarra" }
-        ]
-    },
-    {
-        nombre: "La Rioja",
-        provincias: [
-            { id: "la-rioja", nombre: "La Rioja" }
+            { id: "path758", nombre: "Ceuta" }
         ]
     },
     {
         nombre: "Comunidad Valenciana",
         provincias: [
-            { id: "alicante", nombre: "Alicante" },
-            { id: "castellon", nombre: "Castellón" },
-            { id: "valencia", nombre: "Valencia" }
+            { id: "path670", nombre: "Alicante" },
+            { id: "path678", nombre: "Castellón" },
+            { id: "path566", nombre: "Valencia" }
         ]
     },
-    // Ciudades autónomas no se suelen preguntar como provincias
-    // {
-    //     nombre: "Ceuta",
-    //     provincias: [
-    //         { id: "ceuta", nombre: "Ceuta" }
-    //     ]
-    // },
-    // {
-    //     nombre: "Melilla",
-    //     provincias: [
-    //         { id: "melilla", nombre: "Melilla" }
-    //     ]
-    // }
+    {
+        nombre: "Extremadura",
+        provincias: [
+            { id: "path412", nombre: "Badajoz" },
+            { id: "path426", nombre: "Cáceres" }
+        ]
+    },
+    {
+        nombre: "Galicia",
+        provincias: [
+            { id: "path662", nombre: "La Coruña" },
+            { id: "path460", nombre: "Lugo" },
+            { id: "path634", nombre: "Orense" },
+            { id: "path722", nombre: "Pontevedra" }
+        ]
+    },
+    {
+        nombre: "Islas Baleares",
+        provincias: [
+            { id: "path742", nombre: "Islas Baleares" }
+        ]
+    },
+    {
+        nombre: "Murcia",
+        provincias: [
+            { id: "path492", nombre: "Murcia" }
+        ]
+    },
+    {
+        nombre: "Navarra",
+        provincias: [
+            { id: "path556", nombre: "Navarra" }
+        ]
+    },
+    {
+        nombre: "Pais Vasco",
+        provincias: [
+            { id: "path704", nombre: "Alaba" },
+            { id: "path750", nombre: "Guipuzcua" },
+            { id: "path730", nombre: "Vizcaya" }
+        ]
+    },
 ];
