@@ -20,10 +20,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resultadoModal = new bootstrap.Modal(resultadoModalEl);
 
+    // --- TRADUCCIONES SIMPLIFICADAS ---
+    const textos = {
+        es: {
+            enumerateProvinces: 'Enumera las provincias',
+            writeProvinces: 'Escribe las provincias de esta comunidad autónoma:',
+            separateWithCommas: 'Separa las provincias con comas',
+            indicateCapital: 'Indica la capital',
+            whatIsCapital: '¿Cuál es la capital de esta comunidad autónoma?',
+            writeCapital: 'Escribe la capital',
+            hint: 'Pista',
+            provinceStartsWith: 'Una provincia empieza por',
+            hasLetters: 'y tiene',
+            letters: 'letras',
+            correct: '¡Correcto!',
+            found: 'Encontraste',
+            provinces: 'provincias',
+            province: 'provincia',
+            new_plural: 'nuevas',
+            new_singular: 'nueva',
+            incorrect: 'Incorrecto',
+            completedProvinces: '¡Completaste todas las provincias! Ahora responde por la capital.',
+            capitalIs: 'La capital es',
+            communityCompleted: '¡Comunidad autónoma completada! Pasando a la siguiente...',
+            capitalOf: 'La capital de',
+            is: 'es',
+            gameCompleted: '¡Juego completado!',
+            hideNames: 'Ocultar nombres',
+            showNames: 'Mostrar nombres'
+        },
+        val: {
+            enumerateProvinces: 'Enumera les províncies',
+            writeProvinces: 'Escriu les províncies d\'aquesta comunitat autònoma:',
+            separateWithCommas: 'Separa les províncies amb comes',
+            indicateCapital: 'Indica la capital',
+            whatIsCapital: 'Quina és la capital d\'aquesta comunitat autònoma?',
+            writeCapital: 'Escriu la capital',
+            hint: 'Pista',
+            provinceStartsWith: 'Una província comença per',
+            hasLetters: 'i té',
+            letters: 'lletres',
+            correct: 'Correcte!',
+            found: 'Has trobat',
+            provinces: 'províncies',
+            province: 'província',
+            new_plural: 'noves',
+            new_singular: 'nova',
+            incorrect: 'Incorrecte',
+            completedProvinces: 'Has completat totes les províncies! Ara respon per la capital.',
+            capitalIs: 'La capital és',
+            communityCompleted: 'Comunitat autònoma completada! Passant a la següent...',
+            capitalOf: 'La capital de',
+            is: 'és',
+            gameCompleted: 'Joc completat!',
+            hideNames: 'Ocultar noms',
+            showNames: 'Mostrar noms'
+        }
+    };
+
     // --- ESTADO DEL JUEGO ---
     let comunidadesRestantes = [];
     let comunidadActual = null;
-    let modoActual = 'provincias'; // 'provincias' o 'capital'
+    let modoActual = 'provincias';
     let errores = 0;
     let svgMap = null;
     let mostrarNombres = true;
@@ -33,30 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let idiomaActual = 'es';
 
     /**
-     * Normaliza un string: minúsculas, sin espacios extra y sin tildes.
-     * @param {string} str El string a normalizar.
-     * @returns {string} El string normalizado.
+     * Obtiene texto traducido
      */
-    const normalizarString = (str) => {
-        if (!str) return '';
-        return str
-            .trim()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+    const t = (key, fallback = key) => {
+        return textos[idiomaActual]?.[key] || fallback;
     };
 
     /**
-     * Obtiene una traducción de manera segura.
-     * @param {string} key La clave de traducción.
-     * @param {string} fallback Texto por defecto si no hay traducción.
-     * @returns {string} El texto traducido o el fallback.
+     * Normaliza un string: minúsculas, sin espacios extra y sin tildes.
      */
-    const t = (key, fallback = key) => {
-        if (typeof i18n !== 'undefined' && i18n.t) {
-            return i18n.t(key);
-        }
-        return fallback;
+    const normalizarString = (str) => {
+        if (!str) return '';
+        return str.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     };
 
     /**
@@ -64,17 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const cargarMapa = async () => {
         try {
-            const rutaArchivo = mostrarNombres ? 
-                'img/provinciasES.svg' : 
-                'img/provinciasES_sinNombres.svg';
-            
+            const rutaArchivo = mostrarNombres ? 'img/provinciasES.svg' : 'img/provinciasES_sinNombres.svg';
             const response = await fetch(rutaArchivo);
             if (!response.ok) throw new Error('No se pudo cargar el mapa.');
             const svgText = await response.text();
             mapaContainer.innerHTML = svgText;
             svgMap = mapaContainer.querySelector('svg');
             
-            // Aplicar estilos a provincias si están encontradas
             if (svgMap && provinciasEncontradas.size > 0) {
                 provinciasEncontradas.forEach(nombreProvincia => {
                     const provincia = comunidadActual?.provincias.find(p => 
@@ -85,10 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-            
         } catch (error) {
             mapaContainer.innerHTML = `<div class="alert alert-danger">Error al cargar el mapa: ${error.message}</div>`;
-            console.error(error);
         }
     };
 
@@ -97,78 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const toggleNombres = async () => {
         mostrarNombres = !mostrarNombres;
-        
-        // Actualizar el botón usando el sistema i18n
         const icon = toggleNombresBtn?.querySelector('i');
         if (icon && toggleTextEl) {
             if (mostrarNombres) {
                 icon.className = 'bi bi-eye-slash me-1';
-                toggleTextEl.textContent = typeof i18n !== 'undefined' ? i18n.t('map.hideNames') : 'Ocultar nombres';
+                toggleTextEl.textContent = t('hideNames');
             } else {
                 icon.className = 'bi bi-eye me-1';
-                toggleTextEl.textContent = typeof i18n !== 'undefined' ? i18n.t('map.showNames') : 'Mostrar nombres';
+                toggleTextEl.textContent = t('showNames');
             }
         }
-        
-        // Recargar el mapa
         await cargarMapa();
     };
 
     /**
-     * Inicia o reinicia el juego.
-     */
-    const iniciarJuego = () => {
-        errores = 0;
-        comunidadesRestantes = [...comunidades];
-        provinciasEncontradas.clear();
-        pistasUsadas = 0;
-
-        // Limpiar estilos de provincias
-        if (svgMap) {
-            svgMap.querySelectorAll('path, polygon').forEach(element => {
-                element.classList.remove('correct', 'highlight');
-            });
-        }
-        
-        feedbackEl.innerHTML = '';
-        respuestaInput.value = '';
-        respuestaInput.disabled = false;
-        quizForm.querySelector('button[type="submit"]').disabled = false;
-        pistaBtn.disabled = false;
-
-        siguienteComunidad();
-    };
-
-    /**
-     * Selecciona la siguiente comunidad autónoma de forma aleatoria.
-     */
-    const siguienteComunidad = () => {
-        if (comunidadesRestantes.length === 0) {
-            mostrarResultados();
-            return;
-        }
-
-        const indiceComunidad = Math.floor(Math.random() * comunidadesRestantes.length);
-        comunidadActual = comunidadesRestantes[indiceComunidad];
-        comunidadesRestantes.splice(indiceComunidad, 1);
-
-        const datos = obtenerDatosComunidad(comunidadActual);
-        comunidadActualEl.textContent = datos.nombre;
-        provinciasEncontradas.clear();
-        pistasUsadas = 0;
-        capitalCompletada = false;
-        
-        // Siempre empezar con provincias
-        modoActual = 'provincias';
-        configurarModoProvincias();
-        
-        respuestaInput.focus();
-    };
-
-    /**
      * Obtiene los datos de la comunidad en el idioma actual.
-     * @param {Object} comunidad La comunidad autónoma.
-     * @returns {Object} Los datos de la comunidad en el idioma actual.
      */
     const obtenerDatosComunidad = (comunidad) => {
         if (idiomaActual === 'val') {
@@ -193,68 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Cambia el idioma de la interfaz.
-     * @param {string} nuevoIdioma El código del idioma ('es' o 'val').
-     */
-    const cambiarIdioma = (nuevoIdioma) => {
-        idiomaActual = nuevoIdioma;
-        
-        if (typeof i18n !== 'undefined') {
-            i18n.setLanguage(nuevoIdioma);
-            // Actualizar textos de la interfaz
-            actualizarTextos();
-        }
-        
-        // Si hay una comunidad activa, actualizar su información
-        if (comunidadActual) {
-            const datosActualizados = obtenerDatosComunidad(comunidadActual);
-            if (comunidadActualEl) {
-                comunidadActualEl.textContent = datosActualizados.nombre;
-            }
-            
-            if (modoActual === 'provincias') {
-                configurarModoProvincias();
-            } else {
-                configurarModoCapital();
-            }
-        }
-    };
-
-    /**
-     * Actualiza todos los textos de la interfaz según el idioma actual.
-     */
-    const actualizarTextos = () => {
-        // Actualizar elementos con data-i18n
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            element.textContent = i18n.t(key);
-        });
-        
-        // Actualizar placeholders
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            element.placeholder = i18n.t(key);
-        });
-        
-        // Actualizar el botón de toggle nombres
-        if (toggleNombresBtn && toggleTextEl) {
-            if (mostrarNombres) {
-                toggleTextEl.textContent = i18n.t('map.hideNames');
-            } else {
-                toggleTextEl.textContent = i18n.t('map.showNames');
-            }
-        }
-    };
-
-    /**
      * Configura la interfaz para el modo de provincias.
      */
     const configurarModoProvincias = () => {
         const datos = obtenerDatosComunidad(comunidadActual);
-        
-        if (tipoPreguntaEl) tipoPreguntaEl.textContent = i18n.t('game.enumerateProvinces');
-        if (preguntaTextoEl) preguntaTextoEl.textContent = i18n.t('game.writeProvinces');
-        if (respuestaInput) respuestaInput.placeholder = i18n.t('game.separateWithCommas');
+        if (tipoPreguntaEl) tipoPreguntaEl.textContent = t('enumerateProvinces');
+        if (preguntaTextoEl) preguntaTextoEl.textContent = t('writeProvinces');
+        if (respuestaInput) respuestaInput.placeholder = t('separateWithCommas');
         if (totalProvinciasEl) totalProvinciasEl.textContent = datos.provincias.length;
         if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = provinciasEncontradas.size;
         if (pistaBtn) pistaBtn.style.display = 'inline-block';
@@ -264,12 +192,89 @@ document.addEventListener('DOMContentLoaded', () => {
      * Configura la interfaz para el modo de capital.
      */
     const configurarModoCapital = () => {
-        if (tipoPreguntaEl) tipoPreguntaEl.textContent = i18n.t('game.indicateCapital');
-        if (preguntaTextoEl) preguntaTextoEl.textContent = i18n.t('game.whatIsCapital');
-        if (respuestaInput) respuestaInput.placeholder = i18n.t('game.writeCapital');
+        if (tipoPreguntaEl) tipoPreguntaEl.textContent = t('indicateCapital');
+        if (preguntaTextoEl) preguntaTextoEl.textContent = t('whatIsCapital');
+        if (respuestaInput) respuestaInput.placeholder = t('writeCapital');
         if (totalProvinciasEl) totalProvinciasEl.textContent = '1';
         if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = capitalCompletada ? '1' : '0';
         if (pistaBtn) pistaBtn.style.display = 'none';
+    };
+
+    /**
+     * Cambia el idioma de la interfaz.
+     */
+    const cambiarIdioma = (nuevoIdioma) => {
+        idiomaActual = nuevoIdioma;
+        
+        if (comunidadActual) {
+            const datosActualizados = obtenerDatosComunidad(comunidadActual);
+            if (comunidadActualEl) comunidadActualEl.textContent = datosActualizados.nombre;
+            
+            if (modoActual === 'provincias') {
+                configurarModoProvincias();
+            } else {
+                configurarModoCapital();
+            }
+        }
+        
+        // Actualizar botón de toggle
+        if (toggleTextEl) {
+            toggleTextEl.textContent = mostrarNombres ? t('hideNames') : t('showNames');
+        }
+    };
+
+    /**
+     * Inicia o reinicia el juego.
+     */
+    const iniciarJuego = () => {
+        errores = 0;
+        comunidadesRestantes = [...comunidades];
+        provinciasEncontradas.clear();
+        pistasUsadas = 0;
+
+        if (svgMap) {
+            svgMap.querySelectorAll('path, polygon').forEach(element => {
+                element.classList.remove('correct', 'highlight');
+            });
+        }
+        
+        if (feedbackEl) feedbackEl.innerHTML = '';
+        if (respuestaInput) {
+            respuestaInput.value = '';
+            respuestaInput.disabled = false;
+        }
+        if (quizForm) {
+            const submitBtn = quizForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = false;
+        }
+        if (pistaBtn) pistaBtn.disabled = false;
+
+        siguienteComunidad();
+    };
+
+    /**
+     * Selecciona la siguiente comunidad autónoma de forma aleatoria.
+     */
+    const siguienteComunidad = () => {
+        if (comunidadesRestantes.length === 0) {
+            mostrarResultados();
+            return;
+        }
+
+        const indiceComunidad = Math.floor(Math.random() * comunidadesRestantes.length);
+        comunidadActual = comunidadesRestantes[indiceComunidad];
+        comunidadesRestantes.splice(indiceComunidad, 1);
+
+        const datos = obtenerDatosComunidad(comunidadActual);
+        if (comunidadActualEl) comunidadActualEl.textContent = datos.nombre;
+        provinciasEncontradas.clear();
+        pistasUsadas = 0;
+        capitalCompletada = false;
+        
+        modoActual = 'provincias';
+        configurarModoProvincias();
+        
+        if (respuestaInput) respuestaInput.focus();
     };
 
     /**
@@ -289,10 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const longitud = provinciaAleatoria.nombre.length;
         
         pistasUsadas++;
-        feedbackEl.innerHTML = `<div class="alert alert-info">💡 ${i18n.t('messages.hint')}: ${i18n.t('messages.provinceStartsWith')} "${primeraLetra}" ${i18n.t('messages.hasLetters')} ${longitud} ${i18n.t('messages.letters')}.</div>`;
+        if (feedbackEl) {
+            feedbackEl.innerHTML = `<div class="alert alert-info">💡 ${t('hint')}: ${t('provinceStartsWith')} "${primeraLetra}" ${t('hasLetters')} ${longitud} ${t('letters')}.</div>`;
+        }
         
         setTimeout(() => {
-            if (feedbackEl.innerHTML.includes('💡')) {
+            if (feedbackEl && feedbackEl.innerHTML.includes('💡')) {
                 feedbackEl.innerHTML = '';
             }
         }, 4000);
@@ -300,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Comprueba las respuestas del usuario.
-     * @param {Event} e Evento de envío del formulario.
      */
     const comprobarRespuesta = (e) => {
         e.preventDefault();
@@ -317,14 +323,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Comprueba las provincias introducidas por el usuario.
-     * @param {string} respuestaUsuario 
      */
     const comprobarProvincias = (respuestaUsuario) => {
-        const provinciasIntroducidas = respuestaUsuario
-            .split(',')
-            .map(p => p.trim())
-            .filter(p => p.length > 0);
-
+        const provinciasIntroducidas = respuestaUsuario.split(',').map(p => p.trim()).filter(p => p.length > 0);
         const datos = obtenerDatosComunidad(comunidadActual);
         let nuevasEncontradas = 0;
         let respuestasIncorrectas = [];
@@ -332,12 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
         provinciasIntroducidas.forEach(provinciaUsuario => {
             const provinciaUsuarioNorm = normalizarString(provinciaUsuario);
             
-            // Verificar si ya fue encontrada
-            if (provinciasEncontradas.has(provinciaUsuarioNorm)) {
-                return;
-            }
+            if (provinciasEncontradas.has(provinciaUsuarioNorm)) return;
             
-            // Buscar en las provincias de la comunidad actual
             const provinciaCorrecta = datos.provincias.find(p => 
                 normalizarString(p.nombre) === provinciaUsuarioNorm);
             
@@ -345,7 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 provinciasEncontradas.add(provinciaUsuarioNorm);
                 nuevasEncontradas++;
                 
-                // Marcar en el mapa
                 if (svgMap) {
                     const element = svgMap.getElementById(provinciaCorrecta.id);
                     if (element) element.classList.add('correct');
@@ -355,33 +351,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Actualizar contador
-        provinciasEncontradasEl.textContent = provinciasEncontradas.size;
+        if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = provinciasEncontradas.size;
 
-        // Mostrar feedback
         let feedback = '';
         if (nuevasEncontradas > 0) {
-            const provinciaTexto = nuevasEncontradas > 1 ? i18n.t('messages.provinces') : i18n.t('messages.province');
-            const nuevaTexto = nuevasEncontradas > 1 ? i18n.t('messages.new_plural') : i18n.t('messages.new_singular');
-            feedback += `<div class="alert alert-success">${i18n.t('messages.correct')} ${i18n.t('messages.found')} ${nuevasEncontradas} ${provinciaTexto} ${nuevaTexto}.</div>`;
+            const provinciaTexto = nuevasEncontradas > 1 ? t('provinces') : t('province');
+            const nuevaTexto = nuevasEncontradas > 1 ? t('new_plural') : t('new_singular');
+            feedback += `<div class="alert alert-success">${t('correct')} ${t('found')} ${nuevasEncontradas} ${provinciaTexto} ${nuevaTexto}.</div>`;
         }
         if (respuestasIncorrectas.length > 0) {
             errores += respuestasIncorrectas.length;
-            feedback += `<div class="alert alert-danger">${i18n.t('messages.incorrect')}: ${respuestasIncorrectas.join(', ')}</div>`;
+            feedback += `<div class="alert alert-danger">${t('incorrect')}: ${respuestasIncorrectas.join(', ')}</div>`;
         }
 
-        feedbackEl.innerHTML = feedback;
-        respuestaInput.value = '';
+        if (feedbackEl) feedbackEl.innerHTML = feedback;
+        if (respuestaInput) respuestaInput.value = '';
 
-        // Verificar si se completó la comunidad
         if (provinciasEncontradas.size === datos.provincias.length) {
             setTimeout(() => {
-                feedbackEl.innerHTML = `<div class="alert alert-success">${i18n.t('messages.completedProvinces')}</div>`;
+                if (feedbackEl) feedbackEl.innerHTML = `<div class="alert alert-success">${t('completedProvinces')}</div>`;
                 setTimeout(() => {
                     modoActual = 'capital';
                     configurarModoCapital();
-                    feedbackEl.innerHTML = '';
-                    respuestaInput.focus();
+                    if (feedbackEl) feedbackEl.innerHTML = '';
+                    if (respuestaInput) respuestaInput.focus();
                 }, 2000);
             }, 1000);
         }
@@ -389,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Comprueba la capital introducida por el usuario.
-     * @param {string} respuestaUsuario 
      */
     const comprobarCapital = (respuestaUsuario) => {
         const datos = obtenerDatosComunidad(comunidadActual);
@@ -398,82 +390,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (respuestaUsuarioNorm === capitalCorrectaNorm) {
             capitalCompletada = true;
-            feedbackEl.innerHTML = `<div class="alert alert-success">${i18n.t('messages.correct')} ${i18n.t('messages.capitalIs')} ${datos.capital}</div>`;
-            provinciasEncontradasEl.textContent = '1';
+            feedbackEl.innerHTML = `<div class="alert alert-success">${t('correct')} ${t('capitalIs')} ${datos.capital}</div>`;
+            if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = '1';
             
             setTimeout(() => {
-                feedbackEl.innerHTML = `<div class="alert alert-info">${i18n.t('messages.communityCompleted')}</div>`;
+                if (feedbackEl) feedbackEl.innerHTML = `<div class="alert alert-info">${t('communityCompleted')}</div>`;
                 setTimeout(() => {
-                    feedbackEl.innerHTML = '';
+                    if (feedbackEl) feedbackEl.innerHTML = '';
                     siguienteComunidad();
                 }, 1500);
             }, 1500);
         } else {
             errores++;
-            feedbackEl.innerHTML = `<div class="alert alert-danger">${i18n.t('messages.incorrect')}. ${i18n.t('messages.capitalOf')} ${datos.nombre} ${i18n.t('messages.is')} ${datos.capital}</div>`;
+            if (feedbackEl) feedbackEl.innerHTML = `<div class="alert alert-danger">${t('incorrect')}. ${t('capitalOf')} ${datos.nombre} ${t('is')} ${datos.capital}</div>`;
             
             setTimeout(() => {
                 capitalCompletada = true;
-                provinciasEncontradasEl.textContent = '1';
+                if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = '1';
                 setTimeout(() => {
-                    feedbackEl.innerHTML = '';
+                    if (feedbackEl) feedbackEl.innerHTML = '';
                     siguienteComunidad();
                 }, 1000);
             }, 2500);
         }
         
-        respuestaInput.value = '';
+        if (respuestaInput) respuestaInput.value = '';
     };
 
     /**
      * Muestra la pantalla de resultados finales.
      */
     const mostrarResultados = () => {
-        comunidadActualEl.textContent = i18n.t('messages.gameCompleted');
-        tipoPreguntaEl.textContent = '';
-        respuestaInput.disabled = true;
-        quizForm.querySelector('button[type="submit"]').disabled = true;
-        pistaBtn.disabled = true;
-        totalErroresEl.textContent = errores;
+        if (comunidadActualEl) comunidadActualEl.textContent = t('gameCompleted');
+        if (tipoPreguntaEl) tipoPreguntaEl.textContent = '';
+        if (respuestaInput) respuestaInput.disabled = true;
+        if (quizForm) quizForm.querySelector('button[type="submit"]').disabled = true;
+        if (pistaBtn) pistaBtn.disabled = true;
+        if (totalErroresEl) totalErroresEl.textContent = errores;
         resultadoModal.show();
     };
 
-    /**
-     * Función principal que se ejecuta al cargar la página.
-     */
-    const main = async () => {
-        // Verificar que i18n existe antes de inicializar
-        if (typeof i18n !== 'undefined') {
-            try {
-                await i18n.init();
-                actualizarTextos();
-            } catch (error) {
-                console.warn('Error inicializando i18n:', error);
-            }
-        } else {
-            console.warn('Sistema i18n no disponible');
-        }
-        
-        await cargarMapa();
-        iniciarJuego();
+    // Inicialización
+    cargarMapa().then(() => iniciarJuego());
 
-        // Event listeners
-        quizForm.addEventListener('submit', comprobarRespuesta);
-        resetBtn.addEventListener('click', iniciarJuego);
-        pistaBtn.addEventListener('click', darPista);
-        toggleNombresBtn.addEventListener('click', toggleNombres);
-        
-        if (languageSelector) {
-            languageSelector.addEventListener('change', (e) => {
-                cambiarIdioma(e.target.value);
-            });
-        }
-        
+    // Event listeners
+    if (quizForm) quizForm.addEventListener('submit', comprobarRespuesta);
+    if (resetBtn) resetBtn.addEventListener('click', iniciarJuego);
+    if (pistaBtn) pistaBtn.addEventListener('click', darPista);
+    if (toggleNombresBtn) toggleNombresBtn.addEventListener('click', toggleNombres);
+    if (languageSelector) languageSelector.addEventListener('change', (e) => cambiarIdioma(e.target.value));
+    if (reiniciarModalBtn) {
         reiniciarModalBtn.addEventListener('click', () => {
             resultadoModal.hide();
             iniciarJuego();
         });
-    };
-
-    main();
+    }
 });
