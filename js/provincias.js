@@ -1,32 +1,38 @@
 const comunidades = [
     {
         nombre: "Andalucía",
+        nombreVal: "Andalusia",
         capital: "Sevilla",
+        capitalVal: "Sevilla",
         provincias: [
-            { id: "path580", nombre: "Almería" },
-            { id: "path550", nombre: "Cádiz" },
-            { id: "path504", nombre: "Córdoba" },
-            { id: "path530", nombre: "Granada" },
-            { id: "path522", nombre: "Huelva" },
-            { id: "path408", nombre: "Jaén" },
-            { id: "path596", nombre: "Málaga" },
-            { id: "path446", nombre: "Sevilla" }
+            { id: "path580", nombre: "Almería", nombreVal: "Almeria" },
+            { id: "path550", nombre: "Cádiz", nombreVal: "Cadis" },
+            { id: "path504", nombre: "Córdoba", nombreVal: "Còrdova" },
+            { id: "path530", nombre: "Granada", nombreVal: "Granada" },
+            { id: "path522", nombre: "Huelva", nombreVal: "Huelva" },
+            { id: "path408", nombre: "Jaén", nombreVal: "Jaén" },
+            { id: "path596", nombre: "Málaga", nombreVal: "Màlaga" },
+            { id: "path446", nombre: "Sevilla", nombreVal: "Sevilla" }
         ]
     },
     {
         nombre: "Aragón",
+        nombreVal: "Aragó",
         capital: "Zaragoza",
+        capitalVal: "Saragossa",
         provincias: [
-            { id: "path452", nombre: "Huesca" },
-            { id: "path420", nombre: "Teruel" },
-            { id: "path76", nombre: "Zaragoza" }
+            { id: "path452", nombre: "Huesca", nombreVal: "Osca" },
+            { id: "path420", nombre: "Teruel", nombreVal: "Terol" },
+            { id: "path76", nombre: "Zaragoza", nombreVal: "Saragossa" }
         ]
     },
     {
         nombre: "Asturias",
+        nombreVal: "Astúries",
         capital: "Oviedo",
+        capitalVal: "Oviedo",
         provincias: [
-            { id: "path544", nombre: "Asturias" }
+            { id: "path544", nombre: "Asturias", nombreVal: "Astúries" }
         ]
     },
     {
