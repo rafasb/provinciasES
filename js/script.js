@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mostrarNombres = true;
     let provinciasEncontradas = new Set();
     let pistasUsadas = 0;
+    let capitalCompletada = false;
 
     /**
      * Normaliza un string: minúsculas, sin espacios extra y sin tildes.
@@ -137,27 +138,37 @@ document.addEventListener('DOMContentLoaded', () => {
         comunidadActualEl.textContent = comunidadActual.nombre;
         provinciasEncontradas.clear();
         pistasUsadas = 0;
+        capitalCompletada = false;
         
-        // Alternar entre preguntar provincias y capital
-        modoActual = Math.random() < 0.8 ? 'provincias' : 'capital'; // 80% provincias, 20% capital
-        
-        if (modoActual === 'provincias') {
-            tipoPreguntaEl.textContent = 'Enumera las provincias';
-            preguntaTextoEl.textContent = 'Escribe las provincias de esta comunidad autónoma:';
-            respuestaInput.placeholder = 'Separa las provincias con comas';
-            totalProvinciasEl.textContent = comunidadActual.provincias.length;
-            provinciasEncontradasEl.textContent = '0';
-            pistaBtn.style.display = 'inline-block';
-        } else {
-            tipoPreguntaEl.textContent = 'Indica la capital';
-            preguntaTextoEl.textContent = '¿Cuál es la capital de esta comunidad autónoma?';
-            respuestaInput.placeholder = 'Escribe la capital';
-            totalProvinciasEl.textContent = '1';
-            provinciasEncontradasEl.textContent = '0';
-            pistaBtn.style.display = 'none';
-        }
+        // Siempre empezar con provincias
+        modoActual = 'provincias';
+        configurarModoProvincias();
         
         respuestaInput.focus();
+    };
+
+    /**
+     * Configura la interfaz para el modo de provincias.
+     */
+    const configurarModoProvincias = () => {
+        tipoPreguntaEl.textContent = 'Enumera las provincias';
+        preguntaTextoEl.textContent = 'Escribe las provincias de esta comunidad autónoma:';
+        respuestaInput.placeholder = 'Separa las provincias con comas';
+        totalProvinciasEl.textContent = comunidadActual.provincias.length;
+        provinciasEncontradasEl.textContent = provinciasEncontradas.size;
+        pistaBtn.style.display = 'inline-block';
+    };
+
+    /**
+     * Configura la interfaz para el modo de capital.
+     */
+    const configurarModoCapital = () => {
+        tipoPreguntaEl.textContent = 'Indica la capital';
+        preguntaTextoEl.textContent = '¿Cuál es la capital de esta comunidad autónoma?';
+        respuestaInput.placeholder = 'Escribe la capital';
+        totalProvinciasEl.textContent = '1';
+        provinciasEncontradasEl.textContent = capitalCompletada ? '1' : '0';
+        pistaBtn.style.display = 'none';
     };
 
     /**
@@ -260,8 +271,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Verificar si se completó la comunidad
         if (provinciasEncontradas.size === comunidadActual.provincias.length) {
             setTimeout(() => {
-                feedbackEl.innerHTML = '<div class="alert alert-success">¡Completaste todas las provincias de esta comunidad!</div>';
-                setTimeout(siguienteComunidad, 1500);
+                feedbackEl.innerHTML = '<div class="alert alert-success">¡Completaste todas las provincias! Ahora responde por la capital.</div>';
+                setTimeout(() => {
+                    modoActual = 'capital';
+                    configurarModoCapital();
+                    feedbackEl.innerHTML = '';
+                    respuestaInput.focus();
+                }, 2000);
             }, 1000);
         }
     };
@@ -275,19 +291,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const capitalCorrectaNorm = normalizarString(comunidadActual.capital);
 
         if (respuestaUsuarioNorm === capitalCorrectaNorm) {
+            capitalCompletada = true;
             feedbackEl.innerHTML = '<div class="alert alert-success">¡Correcto! La capital es ' + comunidadActual.capital + '</div>';
             provinciasEncontradasEl.textContent = '1';
             
             setTimeout(() => {
-                feedbackEl.innerHTML = '';
-                siguienteComunidad();
+                feedbackEl.innerHTML = '<div class="alert alert-info">¡Comunidad autónoma completada! Pasando a la siguiente...</div>';
+                setTimeout(() => {
+                    feedbackEl.innerHTML = '';
+                    siguienteComunidad();
+                }, 1500);
             }, 1500);
         } else {
             errores++;
             feedbackEl.innerHTML = '<div class="alert alert-danger">Incorrecto. La capital de ' + comunidadActual.nombre + ' es ' + comunidadActual.capital + '</div>';
             
             setTimeout(() => {
-                siguienteComunidad();
+                capitalCompletada = true;
+                provinciasEncontradasEl.textContent = '1';
+                setTimeout(() => {
+                    feedbackEl.innerHTML = '';
+                    siguienteComunidad();
+                }, 1000);
             }, 2500);
         }
         
