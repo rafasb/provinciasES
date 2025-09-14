@@ -47,6 +47,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Obtiene una traducción de manera segura.
+     * @param {string} key La clave de traducción.
+     * @param {string} fallback Texto por defecto si no hay traducción.
+     * @returns {string} El texto traducido o el fallback.
+     */
+    const t = (key, fallback = key) => {
+        if (typeof i18n !== 'undefined' && i18n.t) {
+            return i18n.t(key);
+        }
+        return fallback;
+    };
+
+    /**
      * Carga el SVG del mapa en el contenedor.
      */
     const cargarMapa = async () => {
@@ -85,14 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleNombres = async () => {
         mostrarNombres = !mostrarNombres;
         
-        // Actualizar el botón
-        const icon = toggleNombresBtn.querySelector('i');
-        if (mostrarNombres) {
-            icon.className = 'bi bi-eye-slash me-1';
-            toggleTextEl.textContent = 'Ocultar nombres';
-        } else {
-            icon.className = 'bi bi-eye me-1';
-            toggleTextEl.textContent = 'Mostrar nombres';
+        // Actualizar el botón usando el sistema i18n
+        const icon = toggleNombresBtn?.querySelector('i');
+        if (icon && toggleTextEl) {
+            if (mostrarNombres) {
+                icon.className = 'bi bi-eye-slash me-1';
+                toggleTextEl.textContent = typeof i18n !== 'undefined' ? i18n.t('map.hideNames') : 'Ocultar nombres';
+            } else {
+                icon.className = 'bi bi-eye me-1';
+                toggleTextEl.textContent = typeof i18n !== 'undefined' ? i18n.t('map.showNames') : 'Mostrar nombres';
+            }
         }
         
         // Recargar el mapa
@@ -137,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         comunidadActual = comunidadesRestantes[indiceComunidad];
         comunidadesRestantes.splice(indiceComunidad, 1);
 
-        comunidadActualEl.textContent = comunidadActual.nombre;
+        const datos = obtenerDatosComunidad(comunidadActual);
+        comunidadActualEl.textContent = datos.nombre;
         provinciasEncontradas.clear();
         pistasUsadas = 0;
         capitalCompletada = false;
@@ -150,27 +166,110 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Obtiene los datos de la comunidad en el idioma actual.
+     * @param {Object} comunidad La comunidad autónoma.
+     * @returns {Object} Los datos de la comunidad en el idioma actual.
+     */
+    const obtenerDatosComunidad = (comunidad) => {
+        if (idiomaActual === 'val') {
+            return {
+                nombre: comunidad.nombreVal || comunidad.nombre,
+                capital: comunidad.capitalVal || comunidad.capital,
+                provincias: comunidad.provincias.map(p => ({
+                    id: p.id,
+                    nombre: p.nombreVal || p.nombre
+                }))
+            };
+        } else {
+            return {
+                nombre: comunidad.nombre,
+                capital: comunidad.capital,
+                provincias: comunidad.provincias.map(p => ({
+                    id: p.id,
+                    nombre: p.nombre
+                }))
+            };
+        }
+    };
+
+    /**
+     * Cambia el idioma de la interfaz.
+     * @param {string} nuevoIdioma El código del idioma ('es' o 'val').
+     */
+    const cambiarIdioma = (nuevoIdioma) => {
+        idiomaActual = nuevoIdioma;
+        
+        if (typeof i18n !== 'undefined') {
+            i18n.setLanguage(nuevoIdioma);
+            // Actualizar textos de la interfaz
+            actualizarTextos();
+        }
+        
+        // Si hay una comunidad activa, actualizar su información
+        if (comunidadActual) {
+            const datosActualizados = obtenerDatosComunidad(comunidadActual);
+            if (comunidadActualEl) {
+                comunidadActualEl.textContent = datosActualizados.nombre;
+            }
+            
+            if (modoActual === 'provincias') {
+                configurarModoProvincias();
+            } else {
+                configurarModoCapital();
+            }
+        }
+    };
+
+    /**
+     * Actualiza todos los textos de la interfaz según el idioma actual.
+     */
+    const actualizarTextos = () => {
+        // Actualizar elementos con data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            element.textContent = i18n.t(key);
+        });
+        
+        // Actualizar placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            element.placeholder = i18n.t(key);
+        });
+        
+        // Actualizar el botón de toggle nombres
+        if (toggleNombresBtn && toggleTextEl) {
+            if (mostrarNombres) {
+                toggleTextEl.textContent = i18n.t('map.hideNames');
+            } else {
+                toggleTextEl.textContent = i18n.t('map.showNames');
+            }
+        }
+    };
+
+    /**
      * Configura la interfaz para el modo de provincias.
      */
     const configurarModoProvincias = () => {
-        tipoPreguntaEl.textContent = 'Enumera las provincias';
-        preguntaTextoEl.textContent = 'Escribe las provincias de esta comunidad autónoma:';
-        respuestaInput.placeholder = 'Separa las provincias con comas';
-        totalProvinciasEl.textContent = comunidadActual.provincias.length;
-        provinciasEncontradasEl.textContent = provinciasEncontradas.size;
-        pistaBtn.style.display = 'inline-block';
+        const datos = obtenerDatosComunidad(comunidadActual);
+        
+        if (tipoPreguntaEl) tipoPreguntaEl.textContent = i18n.t('game.enumerateProvinces');
+        if (preguntaTextoEl) preguntaTextoEl.textContent = i18n.t('game.writeProvinces');
+        if (respuestaInput) respuestaInput.placeholder = i18n.t('game.separateWithCommas');
+        if (totalProvinciasEl) totalProvinciasEl.textContent = datos.provincias.length;
+        if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = provinciasEncontradas.size;
+        if (pistaBtn) pistaBtn.style.display = 'inline-block';
     };
 
     /**
      * Configura la interfaz para el modo de capital.
      */
     const configurarModoCapital = () => {
-        tipoPreguntaEl.textContent = 'Indica la capital';
-        preguntaTextoEl.textContent = '¿Cuál es la capital de esta comunidad autónoma?';
-        respuestaInput.placeholder = 'Escribe la capital';
-        totalProvinciasEl.textContent = '1';
-        provinciasEncontradasEl.textContent = capitalCompletada ? '1' : '0';
-        pistaBtn.style.display = 'none';
+        if (tipoPreguntaEl) tipoPreguntaEl.textContent = i18n.t('game.indicateCapital');
+        if (preguntaTextoEl) preguntaTextoEl.textContent = i18n.t('game.whatIsCapital');
+        if (respuestaInput) respuestaInput.placeholder = i18n.t('game.writeCapital');
+        if (totalProvinciasEl) totalProvinciasEl.textContent = '1';
+        if (provinciasEncontradasEl) provinciasEncontradasEl.textContent = capitalCompletada ? '1' : '0';
+        if (pistaBtn) pistaBtn.style.display = 'none';
     };
 
     /**
@@ -179,7 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const darPista = () => {
         if (modoActual !== 'provincias' || !comunidadActual) return;
         
-        const provinciasRestantes = comunidadActual.provincias.filter(p => 
+        const datos = obtenerDatosComunidad(comunidadActual);
+        const provinciasRestantes = datos.provincias.filter(p => 
             !provinciasEncontradas.has(normalizarString(p.nombre)));
         
         if (provinciasRestantes.length === 0) return;
@@ -189,10 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const longitud = provinciaAleatoria.nombre.length;
         
         pistasUsadas++;
-        feedbackEl.innerHTML = `<div class="alert alert-info">💡 Pista: Una provincia empieza por "${primeraLetra}" y tiene ${longitud} letras.</div>`;
+        feedbackEl.innerHTML = `<div class="alert alert-info">💡 ${i18n.t('messages.hint')}: ${i18n.t('messages.provinceStartsWith')} "${primeraLetra}" ${i18n.t('messages.hasLetters')} ${longitud} ${i18n.t('messages.letters')}.</div>`;
         
         setTimeout(() => {
-            if (feedbackEl.innerHTML.includes('💡 Pista:')) {
+            if (feedbackEl.innerHTML.includes('💡')) {
                 feedbackEl.innerHTML = '';
             }
         }, 4000);
@@ -225,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(p => p.trim())
             .filter(p => p.length > 0);
 
+        const datos = obtenerDatosComunidad(comunidadActual);
         let nuevasEncontradas = 0;
         let respuestasIncorrectas = [];
 
@@ -237,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Buscar en las provincias de la comunidad actual
-            const provinciaCorrecta = comunidadActual.provincias.find(p => 
+            const provinciaCorrecta = datos.provincias.find(p => 
                 normalizarString(p.nombre) === provinciaUsuarioNorm);
             
             if (provinciaCorrecta) {
@@ -260,20 +361,22 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mostrar feedback
         let feedback = '';
         if (nuevasEncontradas > 0) {
-            feedback += `<div class="alert alert-success">¡Correcto! Encontraste ${nuevasEncontradas} provincia${nuevasEncontradas > 1 ? 's' : ''} nueva${nuevasEncontradas > 1 ? 's' : ''}.</div>`;
+            const provinciaTexto = nuevasEncontradas > 1 ? i18n.t('messages.provinces') : i18n.t('messages.province');
+            const nuevaTexto = nuevasEncontradas > 1 ? i18n.t('messages.new_plural') : i18n.t('messages.new_singular');
+            feedback += `<div class="alert alert-success">${i18n.t('messages.correct')} ${i18n.t('messages.found')} ${nuevasEncontradas} ${provinciaTexto} ${nuevaTexto}.</div>`;
         }
         if (respuestasIncorrectas.length > 0) {
             errores += respuestasIncorrectas.length;
-            feedback += `<div class="alert alert-danger">Incorrecto: ${respuestasIncorrectas.join(', ')}</div>`;
+            feedback += `<div class="alert alert-danger">${i18n.t('messages.incorrect')}: ${respuestasIncorrectas.join(', ')}</div>`;
         }
 
         feedbackEl.innerHTML = feedback;
         respuestaInput.value = '';
 
         // Verificar si se completó la comunidad
-        if (provinciasEncontradas.size === comunidadActual.provincias.length) {
+        if (provinciasEncontradas.size === datos.provincias.length) {
             setTimeout(() => {
-                feedbackEl.innerHTML = '<div class="alert alert-success">¡Completaste todas las provincias! Ahora responde por la capital.</div>';
+                feedbackEl.innerHTML = `<div class="alert alert-success">${i18n.t('messages.completedProvinces')}</div>`;
                 setTimeout(() => {
                     modoActual = 'capital';
                     configurarModoCapital();
@@ -289,16 +392,17 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} respuestaUsuario 
      */
     const comprobarCapital = (respuestaUsuario) => {
+        const datos = obtenerDatosComunidad(comunidadActual);
         const respuestaUsuarioNorm = normalizarString(respuestaUsuario);
-        const capitalCorrectaNorm = normalizarString(comunidadActual.capital);
+        const capitalCorrectaNorm = normalizarString(datos.capital);
 
         if (respuestaUsuarioNorm === capitalCorrectaNorm) {
             capitalCompletada = true;
-            feedbackEl.innerHTML = '<div class="alert alert-success">¡Correcto! La capital es ' + comunidadActual.capital + '</div>';
+            feedbackEl.innerHTML = `<div class="alert alert-success">${i18n.t('messages.correct')} ${i18n.t('messages.capitalIs')} ${datos.capital}</div>`;
             provinciasEncontradasEl.textContent = '1';
             
             setTimeout(() => {
-                feedbackEl.innerHTML = '<div class="alert alert-info">¡Comunidad autónoma completada! Pasando a la siguiente...</div>';
+                feedbackEl.innerHTML = `<div class="alert alert-info">${i18n.t('messages.communityCompleted')}</div>`;
                 setTimeout(() => {
                     feedbackEl.innerHTML = '';
                     siguienteComunidad();
@@ -306,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1500);
         } else {
             errores++;
-            feedbackEl.innerHTML = '<div class="alert alert-danger">Incorrecto. La capital de ' + comunidadActual.nombre + ' es ' + comunidadActual.capital + '</div>';
+            feedbackEl.innerHTML = `<div class="alert alert-danger">${i18n.t('messages.incorrect')}. ${i18n.t('messages.capitalOf')} ${datos.nombre} ${i18n.t('messages.is')} ${datos.capital}</div>`;
             
             setTimeout(() => {
                 capitalCompletada = true;
@@ -325,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Muestra la pantalla de resultados finales.
      */
     const mostrarResultados = () => {
-        comunidadActualEl.textContent = '¡Juego completado!';
+        comunidadActualEl.textContent = i18n.t('messages.gameCompleted');
         tipoPreguntaEl.textContent = '';
         respuestaInput.disabled = true;
         quizForm.querySelector('button[type="submit"]').disabled = true;
@@ -338,6 +442,18 @@ document.addEventListener('DOMContentLoaded', () => {
      * Función principal que se ejecuta al cargar la página.
      */
     const main = async () => {
+        // Verificar que i18n existe antes de inicializar
+        if (typeof i18n !== 'undefined') {
+            try {
+                await i18n.init();
+                actualizarTextos();
+            } catch (error) {
+                console.warn('Error inicializando i18n:', error);
+            }
+        } else {
+            console.warn('Sistema i18n no disponible');
+        }
+        
         await cargarMapa();
         iniciarJuego();
 
@@ -346,6 +462,13 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBtn.addEventListener('click', iniciarJuego);
         pistaBtn.addEventListener('click', darPista);
         toggleNombresBtn.addEventListener('click', toggleNombres);
+        
+        if (languageSelector) {
+            languageSelector.addEventListener('change', (e) => {
+                cambiarIdioma(e.target.value);
+            });
+        }
+        
         reiniciarModalBtn.addEventListener('click', () => {
             resultadoModal.hide();
             iniciarJuego();
